@@ -60,25 +60,6 @@ export default function PaginaLeis() {
           </a>
         ))}
       </div>
-
-      {/* Instruções */}
-      <div className="mt-8 bg-amber-50 border border-amber-200 rounded-xl p-5">
-        <div className="flex items-start gap-3">
-          <FolderOpen className="text-amber-600 shrink-0 mt-0.5" size={20} />
-          <div>
-            <h3 className="font-semibold text-amber-800 mb-2">📁 Onde colocar os arquivos PDF</h3>
-            <p className="text-sm text-amber-700 mb-3">
-              Para os links funcionarem, coloque os arquivos na pasta <code className="bg-amber-100 px-1.5 py-0.5 rounded font-mono text-xs">public/pdfs/</code> com os seguintes nomes:
-            </p>
-            <div className="bg-white/60 rounded-lg p-3 font-mono text-xs space-y-1">
-              <p className="text-amber-800">public/pdfs/</p>
-              {leisOrdemCronologica.map((lei, i) => (
-                <p key={i} className="text-amber-600 pl-4">├── {lei.arquivo.replace('/pdfs/', '')}</p>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   )
 }

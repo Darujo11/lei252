@@ -31,8 +31,14 @@ Portal interativo para consulta da **Lei Complementar 252/2016** - Plano de Carg
 ### 🧮 Calculadora de Benefícios
 - **Triênio**: 5% a cada 3 anos (máx. 55%)
 - **Mérito**: 5% aos 15 anos + 5% aos 20 anos
-- **Progressões**: A cada 2 anos após estágio
-- **Promoções**: A cada 5 anos após estágio
+- **Progressões**: Letras A-J (2% cada, a cada 2 anos após estágio)
+- **Promoções**: Classes I-V (a cada 5 anos, limite por escolaridade)
+
+### 🤖 ChatBot com IA
+- **Assistente Virtual** com GPT-4 da OpenAI
+- Responde perguntas sobre a LC 252/2016 e alterações
+- Configuração segura via variáveis de ambiente
+- Não inventa informações - orienta consultar RH/Procuradoria quando necessário
 
 ## 📦 Instalação
 
@@ -40,12 +46,33 @@ Portal interativo para consulta da **Lei Complementar 252/2016** - Plano de Carg
 # Instale as dependências
 npm install
 
+# Configure a chave da API da OpenAI (veja abaixo)
+cp .env.example .env
+
 # Rode o servidor de desenvolvimento
 npm run dev
 
 # Build para produção
 npm run build
 ```
+
+## 🤖 Configuração do ChatBot
+
+1. Obtenha uma chave de API da OpenAI em: https://platform.openai.com/api-keys
+
+2. Crie um arquivo `.env` na raiz do projeto:
+```bash
+cp .env.example .env
+```
+
+3. Edite o arquivo `.env` e adicione sua chave:
+```env
+VITE_OPENAI_API_KEY=sk-proj-xxxxxxxxxxxxxxxx
+```
+
+4. **IMPORTANTE**: Nunca commite o arquivo `.env` no Git (já está no `.gitignore`)
+
+5. O chatbot aparecerá como um botão flutuante no canto inferior direito
 
 ## 📁 Configuração dos PDFs
 

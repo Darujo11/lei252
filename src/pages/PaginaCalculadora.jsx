@@ -29,15 +29,19 @@ export default function PaginaCalculadora() {
     const percentualMerito = (merito15 ? 5 : 0) + (merito20 ? 5 : 0)
 
     // Progressões (Art. 38 - a cada 2 anos após estágio probatório)
+    // Progressões vão de A a J (10 letras, cada uma 2%)
     const anosAposEstagio = Math.max(0, anos - 3)
-    const progressoesPossiveis = Math.floor(anosAposEstagio / 2)
+    const progressoesPossiveis = Math.min(Math.floor(anosAposEstagio / 2), 10) // Máximo J (10 progressões)
+    const letrasProgressao = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
+    const letraAtual = progressoesPossiveis > 0 ? letrasProgressao[progressoesPossiveis - 1] : '-'
+    const percentualProgressao = progressoesPossiveis * 2 // Cada letra vale 2%
 
     // Promoções (Art. 41 - a cada 5 anos)
     // Limite baseado na escolaridade
     const limitePromocoes = {
-      'fundamental': 3,
-      'medio': 4,
-      'superior': 5
+      'fundamental': 2,
+      'medio': 3,
+      'superior': 4
     }
     const maxPromocoes = limitePromocoes[escolaridade]
     const promocoesPossiveis = Math.floor(anos / 5) // Contadas a cada 5 anos desde a admissão
@@ -56,6 +60,8 @@ export default function PaginaCalculadora() {
       merito20,
       percentualMerito,
       progressoesPossiveis,
+      letraAtual,
+      percentualProgressao,
       promocoesPossiveis,
       promocoesDisponiveis,
       maxPromocoes,
@@ -91,9 +97,9 @@ export default function PaginaCalculadora() {
               className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-brand-500 focus:outline-none bg-white"
             >
               <option value="">Selecione...</option>
-              <option value="fundamental">Fundamental (3 promoções)</option>
-              <option value="medio">Médio (4 promoções)</option>
-              <option value="superior">Superior (5 promoções)</option>
+              <option value="fundamental">Fundamental (até 2 promoções - Classe III)</option>
+              <option value="medio">Médio (até 3 promoções - Classe IV)</option>
+              <option value="superior">Superior (até 4 promoções - Classe V)</option>
             </select>
           </div>
         </div>
@@ -186,26 +192,39 @@ export default function PaginaCalculadora() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="p-4 bg-blue-50 rounded-xl">
-                <p className="text-2xl font-bold text-blue-700">{resultado.progressoesPossiveis}</p>
-                <p className="text-sm text-gray-500">Progressões possíveis</p>
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-2xl font-bold text-blue-700">Letra {resultado.letraAtual}</p>
+                  <span className="text-xs bg-blue-200 text-blue-800 px-2 py-1 rounded-full font-semibold">
+                    {resultado.progressoesPossiveis}/10
+                  </span>
+                </div>
+                <p className="text-sm text-gray-500">Progressão atual</p>
                 <p className="text-xs text-gray-400 mt-1">Art. 38 - A cada 2 anos</p>
+                <div className="mt-3 pt-3 border-t border-blue-200">
+                  <p className="text-xs text-gray-600">
+                    <span className="font-semibold">A → J:</span> 10 letras (cada uma 2%)
+                  </p>
+                  <p className="text-xs text-blue-600 mt-1">
+                    Percentual de progressão: {resultado.percentualProgressao}%
+                  </p>
+                </div>
               </div>
               <div className="p-4 bg-orange-50 rounded-xl">
                 <div className="flex items-center justify-between mb-2">
-                  <p className="text-2xl font-bold text-orange-700">{resultado.promocoesDisponiveis}</p>
+                  <p className="text-2xl font-bold text-orange-700">Classe {resultado.promocoesDisponiveis + 1}</p>
                   <span className="text-xs bg-orange-200 text-orange-800 px-2 py-1 rounded-full font-semibold">
-                    de {resultado.maxPromocoes}
+                    {resultado.promocoesDisponiveis} promoções
                   </span>
                 </div>
-                <p className="text-sm text-gray-500">Promoções disponíveis</p>
+                <p className="text-sm text-gray-500">Classe atual</p>
                 <p className="text-xs text-gray-400 mt-1">Art. 41 - A cada 5 anos</p>
                 <div className="mt-3 pt-3 border-t border-orange-200">
                   <p className="text-xs text-gray-600">
-                    <span className="font-semibold">Nível {resultado.escolaridadeTexto}:</span> Limite de {resultado.maxPromocoes} promoções
+                    <span className="font-semibold">Nível {resultado.escolaridadeTexto}:</span> Máx. {resultado.maxPromocoes} promoções (Classe {resultado.maxPromocoes + 1})
                   </p>
                   {resultado.promocoesDisponiveis < resultado.maxPromocoes && (
                     <p className="text-xs text-orange-600 mt-1">
-                      Você ainda pode alcançar {resultado.promocoesRestantes} promoção(ões)
+                      Faltam {resultado.promocoesRestantes} promoção(ões) para o limite
                     </p>
                   )}
                   {resultado.promocoesDisponiveis >= resultado.maxPromocoes && (
@@ -216,7 +235,16 @@ export default function PaginaCalculadora() {
                 </div>
               </div>
             </div>
-            <p className="text-xs text-gray-400 mt-3">* Progressões: a cada 2 anos após estágio probatório. Promoções: a cada 5 anos desde a admissão. Ambas requerem média mínima de 70% nas avaliações.</p>
+            <div className="mt-4 p-4 bg-gray-50 rounded-xl">
+              <p className="text-xs text-gray-600 mb-2">
+                <span className="font-semibold">Como funciona:</span>
+              </p>
+              <ul className="text-xs text-gray-600 space-y-1">
+                <li>• <strong>Progressões (A-J):</strong> A cada 2 anos após estágio probatório, você avança uma letra (2% cada). Máximo: Letra J.</li>
+                <li>• <strong>Promoções (Classes):</strong> Você começa na Classe I. A cada 5 anos, recebe uma promoção e sobe de classe (Classe II, III, IV...). As letras reiniciam de A ao mudar de classe.</li>
+                <li>• Ambas requerem média mínima de 70% nas avaliações de desempenho.</li>
+              </ul>
+            </div>
           </div>
 
           {/* Total */}

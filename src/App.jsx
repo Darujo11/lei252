@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Header from './components/Header'
 import Sidebar from './components/Sidebar'
 import Footer from './components/Footer'
+import ChatBot from './components/ChatBot'
 import PaginaInicial from './pages/PaginaInicial'
 import PaginaGlossario from './pages/PaginaGlossario'
 import PaginaCalculadora from './pages/PaginaCalculadora'
@@ -62,6 +63,7 @@ function App() {
       </div>
 
       <Footer />
+      <ChatBot />
     </div>
   )
 }
