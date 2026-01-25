@@ -93,32 +93,42 @@ ALTER TABLE chatbot_conversas ENABLE ROW LEVEL SECURITY;
 ALTER TABLE analytics_sessoes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE analytics_diarias ENABLE ROW LEVEL SECURITY;
 
+-- Remove políticas antigas se existirem (para permitir re-execução do script)
+DROP POLICY IF EXISTS "Permitir INSERT público visitas" ON analytics_visitas;
+DROP POLICY IF EXISTS "Permitir INSERT público conversas" ON chatbot_conversas;
+DROP POLICY IF EXISTS "Permitir INSERT público sessões" ON analytics_sessoes;
+DROP POLICY IF EXISTS "Permitir UPDATE público sessões" ON analytics_sessoes;
+DROP POLICY IF EXISTS "Permitir SELECT público visitas" ON analytics_visitas;
+DROP POLICY IF EXISTS "Permitir SELECT público conversas" ON chatbot_conversas;
+DROP POLICY IF EXISTS "Permitir SELECT público sessões" ON analytics_sessoes;
+DROP POLICY IF EXISTS "Permitir SELECT público diárias" ON analytics_diarias;
+
 -- Política: Permitir INSERT anônimo (para registrar visitas)
-CREATE POLICY IF NOT EXISTS "Permitir INSERT público visitas" ON analytics_visitas
+CREATE POLICY "Permitir INSERT público visitas" ON analytics_visitas
   FOR INSERT WITH CHECK (true);
 
-CREATE POLICY IF NOT EXISTS "Permitir INSERT público conversas" ON chatbot_conversas
+CREATE POLICY "Permitir INSERT público conversas" ON chatbot_conversas
   FOR INSERT WITH CHECK (true);
 
-CREATE POLICY IF NOT EXISTS "Permitir INSERT público sessões" ON analytics_sessoes
+CREATE POLICY "Permitir INSERT público sessões" ON analytics_sessoes
   FOR INSERT WITH CHECK (true);
 
 -- Política: Permitir UPDATE em sessões (para atualizar contadores)
-CREATE POLICY IF NOT EXISTS "Permitir UPDATE público sessões" ON analytics_sessoes
+CREATE POLICY "Permitir UPDATE público sessões" ON analytics_sessoes
   FOR UPDATE USING (true);
 
 -- Política: Permitir SELECT público (TEMPORÁRIO - para desenvolvimento)
 -- IMPORTANTE: Em produção, remova essas políticas e use autenticação
-CREATE POLICY IF NOT EXISTS "Permitir SELECT público visitas" ON analytics_visitas
+CREATE POLICY "Permitir SELECT público visitas" ON analytics_visitas
   FOR SELECT USING (true);
 
-CREATE POLICY IF NOT EXISTS "Permitir SELECT público conversas" ON chatbot_conversas
+CREATE POLICY "Permitir SELECT público conversas" ON chatbot_conversas
   FOR SELECT USING (true);
 
-CREATE POLICY IF NOT EXISTS "Permitir SELECT público sessões" ON analytics_sessoes
+CREATE POLICY "Permitir SELECT público sessões" ON analytics_sessoes
   FOR SELECT USING (true);
 
-CREATE POLICY IF NOT EXISTS "Permitir SELECT público diárias" ON analytics_diarias
+CREATE POLICY "Permitir SELECT público diárias" ON analytics_diarias
   FOR SELECT USING (true);
 
 -- ============================================
