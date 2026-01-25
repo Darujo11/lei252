@@ -1,4 +1,7 @@
-import { supabase, isSupabaseEnabled } from '../lib/supabase'
+import { supabase, isSupabaseEnabled as checkSupabase } from '../lib/supabase'
+
+// Re-exporta para uso em outros arquivos
+export const isSupabaseEnabled = checkSupabase
 
 // Gera um ID de sessão único para o usuário
 const getSessionId = () => {
@@ -12,7 +15,7 @@ const getSessionId = () => {
 
 // Registra uma visita a uma página
 export const trackPageView = async (pagina, secao = null) => {
-  if (!isSupabaseEnabled()) {
+  if (!checkSupabase()) {
     console.log('📊 Analytics desabilitado (Supabase não configurado)')
     return
   }
@@ -85,7 +88,7 @@ const atualizarSessao = async (sessionId) => {
 
 // Registra uma conversa do chatbot
 export const trackChatbotConversation = async (pergunta, resposta, metadata = {}) => {
-  if (!isSupabaseEnabled()) {
+  if (!checkSupabase()) {
     console.log('📊 Analytics desabilitado (Supabase não configurado)')
     return
   }
@@ -135,7 +138,7 @@ export const trackChatbotConversation = async (pergunta, resposta, metadata = {}
 
 // Registra tempo de permanência em uma página (chamar ao sair da página)
 export const trackPageDuration = async (paginaId, duracaoSegundos) => {
-  if (!isSupabaseEnabled()) return
+  if (!checkSupabase()) return
 
   try {
     const sessionId = getSessionId()
@@ -163,7 +166,7 @@ export const trackPageDuration = async (paginaId, duracaoSegundos) => {
 
 // Obtém estatísticas gerais (para o painel admin)
 export const getAnalyticsSummary = async (diasAtras = 30) => {
-  if (!isSupabaseEnabled()) return null
+  if (!checkSupabase()) return null
 
   try {
     const dataInicio = new Date()
@@ -216,7 +219,7 @@ export const getAnalyticsSummary = async (diasAtras = 30) => {
 
 // Obtém conversas do chatbot (para o painel admin)
 export const getChatbotConversations = async (limite = 50) => {
-  if (!isSupabaseEnabled()) return []
+  if (!checkSupabase()) return []
 
   try {
     const { data, error } = await supabase
@@ -235,7 +238,7 @@ export const getChatbotConversations = async (limite = 50) => {
 
 // Obtém visitas por dia (para gráficos)
 export const getVisitasPorDia = async (diasAtras = 30) => {
-  if (!isSupabaseEnabled()) return []
+  if (!checkSupabase()) return []
 
   try {
     const dataInicio = new Date()
