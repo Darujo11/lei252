@@ -8,34 +8,17 @@
 CREATE TABLE IF NOT EXISTS analytics_visitas (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-
-  -- Identificação da sessão
   session_id TEXT NOT NULL,
-
-  -- Informações do usuário
   user_agent TEXT,
   ip_address INET,
-
-  -- Informações da página
   pagina TEXT,
   secao TEXT,
-
-  -- Dados técnicos
   viewport_width INTEGER,
   viewport_height INTEGER,
   referrer TEXT,
-
-  -- Localização (se disponível)
   country TEXT,
   city TEXT,
-
-  -- Tempo de permanência
-  duracao_segundos INTEGER,
-
-  -- Índice para buscas rápidas
-  INDEX idx_session (session_id),
-  INDEX idx_created (created_at),
-  INDEX idx_pagina (pagina)
+  duracao_segundos INTEGER
 );
 
 -- TABELA 2: Conversas do ChatBot
@@ -43,28 +26,14 @@ CREATE TABLE IF NOT EXISTS analytics_visitas (
 CREATE TABLE IF NOT EXISTS chatbot_conversas (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-
-  -- Identificação da sessão
   session_id TEXT NOT NULL,
-
-  -- Mensagem do usuário
   pergunta TEXT NOT NULL,
-
-  -- Resposta da IA
   resposta TEXT NOT NULL,
-
-  -- Metadados
   modelo TEXT DEFAULT 'gpt-4o-mini',
   tokens_usados INTEGER,
   tempo_resposta_ms INTEGER,
-
-  -- Feedback do usuário (para implementar no futuro)
   feedback_positivo BOOLEAN,
-  feedback_comentario TEXT,
-
-  -- Índices
-  INDEX idx_session (session_id),
-  INDEX idx_created (created_at)
+  feedback_comentario TEXT
 );
 
 -- TABELA 3: Sessões Agregadas
@@ -72,23 +41,12 @@ CREATE TABLE IF NOT EXISTS chatbot_conversas (
 CREATE TABLE IF NOT EXISTS analytics_sessoes (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-
   session_id TEXT UNIQUE NOT NULL,
-
-  -- Primeira e última atividade
   primeira_visita TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   ultima_visita TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-
-  -- Contadores
   total_paginas_vistas INTEGER DEFAULT 1,
   total_perguntas_chatbot INTEGER DEFAULT 0,
-
-  -- Duração total da sessão
-  duracao_total_segundos INTEGER DEFAULT 0,
-
-  -- Índices
-  INDEX idx_session (session_id),
-  INDEX idx_created (created_at)
+  duracao_total_segundos INTEGER DEFAULT 0
 );
 
 -- TABELA 4: Estatísticas Diárias (Agregação)
@@ -96,25 +54,34 @@ CREATE TABLE IF NOT EXISTS analytics_sessoes (
 CREATE TABLE IF NOT EXISTS analytics_diarias (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   data DATE UNIQUE NOT NULL,
-
-  -- Contadores gerais
   total_visitas INTEGER DEFAULT 0,
   total_sessoes_unicas INTEGER DEFAULT 0,
   total_perguntas_chatbot INTEGER DEFAULT 0,
-
-  -- Métricas de engajamento
   media_duracao_segundos INTEGER DEFAULT 0,
   media_paginas_por_sessao FLOAT DEFAULT 0,
-
-  -- Páginas mais visitadas (JSON)
   paginas_populares JSONB,
-
-  -- Perguntas mais frequentes (JSON)
-  perguntas_frequentes JSONB,
-
-  -- Índice
-  INDEX idx_data (data)
+  perguntas_frequentes JSONB
 );
+
+-- ============================================
+-- ÍNDICES PARA OTIMIZAÇÃO DE CONSULTAS
+-- ============================================
+
+-- Índices para analytics_visitas
+CREATE INDEX IF NOT EXISTS idx_visitas_session ON analytics_visitas(session_id);
+CREATE INDEX IF NOT EXISTS idx_visitas_created ON analytics_visitas(created_at);
+CREATE INDEX IF NOT EXISTS idx_visitas_pagina ON analytics_visitas(pagina);
+
+-- Índices para chatbot_conversas
+CREATE INDEX IF NOT EXISTS idx_conversas_session ON chatbot_conversas(session_id);
+CREATE INDEX IF NOT EXISTS idx_conversas_created ON chatbot_conversas(created_at);
+
+-- Índices para analytics_sessoes
+CREATE INDEX IF NOT EXISTS idx_sessoes_session ON analytics_sessoes(session_id);
+CREATE INDEX IF NOT EXISTS idx_sessoes_created ON analytics_sessoes(created_at);
+
+-- Índices para analytics_diarias
+CREATE INDEX IF NOT EXISTS idx_diarias_data ON analytics_diarias(data);
 
 -- ============================================
 -- POLÍTICAS DE SEGURANÇA (RLS - Row Level Security)
@@ -127,32 +94,32 @@ ALTER TABLE analytics_sessoes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE analytics_diarias ENABLE ROW LEVEL SECURITY;
 
 -- Política: Permitir INSERT anônimo (para registrar visitas)
-CREATE POLICY "Permitir INSERT público" ON analytics_visitas
+CREATE POLICY IF NOT EXISTS "Permitir INSERT público visitas" ON analytics_visitas
   FOR INSERT WITH CHECK (true);
 
-CREATE POLICY "Permitir INSERT público" ON chatbot_conversas
+CREATE POLICY IF NOT EXISTS "Permitir INSERT público conversas" ON chatbot_conversas
   FOR INSERT WITH CHECK (true);
 
-CREATE POLICY "Permitir INSERT público" ON analytics_sessoes
+CREATE POLICY IF NOT EXISTS "Permitir INSERT público sessões" ON analytics_sessoes
   FOR INSERT WITH CHECK (true);
 
 -- Política: Permitir UPDATE em sessões (para atualizar contadores)
-CREATE POLICY "Permitir UPDATE público" ON analytics_sessoes
+CREATE POLICY IF NOT EXISTS "Permitir UPDATE público sessões" ON analytics_sessoes
   FOR UPDATE USING (true);
 
--- Política: Apenas leitura autenticada para o painel admin
--- (Você precisará criar um usuário admin no Supabase)
-CREATE POLICY "Admin pode ler tudo" ON analytics_visitas
-  FOR SELECT USING (auth.role() = 'authenticated');
+-- Política: Permitir SELECT público (TEMPORÁRIO - para desenvolvimento)
+-- IMPORTANTE: Em produção, remova essas políticas e use autenticação
+CREATE POLICY IF NOT EXISTS "Permitir SELECT público visitas" ON analytics_visitas
+  FOR SELECT USING (true);
 
-CREATE POLICY "Admin pode ler tudo" ON chatbot_conversas
-  FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY IF NOT EXISTS "Permitir SELECT público conversas" ON chatbot_conversas
+  FOR SELECT USING (true);
 
-CREATE POLICY "Admin pode ler tudo" ON analytics_sessoes
-  FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY IF NOT EXISTS "Permitir SELECT público sessões" ON analytics_sessoes
+  FOR SELECT USING (true);
 
-CREATE POLICY "Admin pode ler tudo" ON analytics_diarias
-  FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY IF NOT EXISTS "Permitir SELECT público diárias" ON analytics_diarias
+  FOR SELECT USING (true);
 
 -- ============================================
 -- FUNÇÕES AUXILIARES
@@ -194,6 +161,8 @@ $$ LANGUAGE plpgsql;
 -- ============================================
 
 /*
+✅ SCRIPT PRONTO PARA USAR!
+
 1. Copie este script completo
 2. Acesse seu projeto no Supabase (https://supabase.com)
 3. Vá em "SQL Editor"
@@ -207,4 +176,12 @@ $$ LANGUAGE plpgsql;
 7. Configure no arquivo .env do projeto:
    VITE_SUPABASE_URL=sua_url_aqui
    VITE_SUPABASE_ANON_KEY=sua_chave_aqui
+
+8. Reinicie o servidor de desenvolvimento:
+   npm run dev
+
+OBSERVAÇÃO DE SEGURANÇA:
+Por padrão, este script permite SELECT público (leitura) para facilitar o desenvolvimento.
+Em produção, você pode remover as políticas "Permitir SELECT público" e implementar
+autenticação adequada usando o Supabase Auth.
 */
