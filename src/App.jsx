@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Header from './components/Header'
 import Sidebar from './components/Sidebar'
 import Footer from './components/Footer'
@@ -7,12 +7,36 @@ import PaginaInicial from './pages/PaginaInicial'
 import PaginaGlossario from './pages/PaginaGlossario'
 import PaginaCalculadora from './pages/PaginaCalculadora'
 import PaginaLeis from './pages/PaginaLeis'
+import PaginaAdminProtegida from './pages/PaginaAdminProtegida'
 import { capitulos } from './data/capitulos'
+import { trackPageView } from './services/analytics'
 
 function App() {
   const [activeSection, setActiveSection] = useState('inicio')
   const [searchTerm, setSearchTerm] = useState('')
   const [showSearch, setShowSearch] = useState(false)
+
+  // Analytics: Rastreia mudanças de página
+  useEffect(() => {
+    const nomesPaginas = {
+      'inicio': 'Lei Completa',
+      'glossario': 'Glossário',
+      'calculadora': 'Calculadora',
+      'leis': 'PDFs das Leis',
+      'admin': 'Painel Admin'
+    }
+
+    const nomePagina = nomesPaginas[activeSection] || activeSection
+    trackPageView(nomePagina, activeSection)
+
+    // Rastreia duração ao sair da página
+    const startTime = Date.now()
+    return () => {
+      const duracao = Math.floor((Date.now() - startTime) / 1000)
+      // Você pode adicionar trackPageDuration aqui se quiser
+      console.log(`⏱️ Tempo na página ${nomePagina}: ${duracao}s`)
+    }
+  }, [activeSection])
 
   const renderContent = () => {
     switch(activeSection) {
@@ -22,6 +46,8 @@ function App() {
         return <PaginaCalculadora />
       case 'leis':
         return <PaginaLeis />
+      case 'admin':
+        return <PaginaAdminProtegida />
       default:
         return <PaginaInicial setActiveSection={setActiveSection} searchTerm={searchTerm} />
     }
@@ -55,6 +81,7 @@ function App() {
               <option value="glossario">📖 Glossário</option>
               <option value="calculadora">🧮 Calculadora</option>
               <option value="leis">📁 PDFs das Leis</option>
+              <option value="admin">📊 Painel Admin</option>
             </select>
           </div>
 

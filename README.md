@@ -40,6 +40,15 @@ Portal interativo para consulta da **Lei Complementar 252/2016** - Plano de Carg
 - Configuração segura via variáveis de ambiente
 - Não inventa informações - orienta consultar RH/Procuradoria quando necessário
 
+### 📊 Painel Administrativo com Analytics
+- **Rastreamento de visitas** - Quantas pessoas acessam o portal
+- **Conversas do ChatBot** - Todas perguntas e respostas salvas
+- **Gráficos interativos** - Visitas por dia, páginas populares
+- **Estatísticas em tempo real** - Sessões únicas, taxa de engajamento
+- **Exportação de dados** - Relatórios em JSON
+- **Proteção por senha** - Acesso restrito ao painel
+- **Supabase** - Banco de dados gratuito e escalável
+
 ## 📦 Instalação
 
 ```bash
@@ -73,6 +82,22 @@ VITE_OPENAI_API_KEY=sk-proj-xxxxxxxxxxxxxxxx
 4. **IMPORTANTE**: Nunca commite o arquivo `.env` no Git (já está no `.gitignore`)
 
 5. O chatbot aparecerá como um botão flutuante no canto inferior direito
+
+## 📊 Configuração do Analytics (Opcional)
+
+O portal inclui um sistema completo de analytics com painel administrativo. Para ativá-lo:
+
+1. **Crie uma conta no Supabase**: https://supabase.com
+2. **Execute o script SQL**: Copie o conteúdo de `supabase-setup.sql` e execute no SQL Editor
+3. **Configure as variáveis no `.env`**:
+   ```env
+   VITE_SUPABASE_URL=https://seu-projeto.supabase.co
+   VITE_SUPABASE_ANON_KEY=sua_chave_anon_aqui
+   VITE_ADMIN_PASSWORD=sua_senha_admin
+   ```
+4. **Acesse o painel**: Clique em "📊 Painel Admin" no menu lateral
+
+📖 **Documentação completa**: Veja [ANALYTICS.md](./ANALYTICS.md) para instruções detalhadas
 
 ## 📁 Configuração dos PDFs
 

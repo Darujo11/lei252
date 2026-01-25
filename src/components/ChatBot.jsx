@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { MessageCircle, X, Send, Loader2, Sparkles, Bot } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
+import { trackChatbotConversation } from '../services/analytics'
 
 export default function ChatBot() {
   const [isOpen, setIsOpen] = useState(false)
@@ -122,6 +123,13 @@ Responda sempre de forma profissional, clara e educada.`
         role: 'assistant',
         content: assistantMessage
       }])
+
+      // Salva a conversa no Supabase
+      await trackChatbotConversation(userMessage, assistantMessage, {
+        modelo: 'gpt-4o-mini',
+        tokens: data.usage?.total_tokens || null,
+        tempoResposta: Date.now() - new Date().getTime(),
+      })
     } catch (error) {
       console.error('Erro completo:', error)
       setMessages(prev => [...prev, {

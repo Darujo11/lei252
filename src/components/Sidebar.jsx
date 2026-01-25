@@ -1,4 +1,4 @@
-import { Home, BookOpen, Calculator, FileText, ChevronDown, ChevronRight } from 'lucide-react'
+import { Home, BookOpen, Calculator, FileText, BarChart3, ChevronDown, ChevronRight } from 'lucide-react'
 import { useState } from 'react'
 
 export default function Sidebar({ activeSection, setActiveSection, capitulos }) {
@@ -54,12 +54,19 @@ export default function Sidebar({ activeSection, setActiveSection, capitulos }) 
             <Calculator size={16} />
             Calculadora
           </button>
-          <button 
+          <button
             onClick={() => setActiveSection('leis')}
             className={`sidebar-item w-full text-left px-4 py-2.5 text-sm flex items-center gap-3 ${activeSection === 'leis' ? 'active bg-brand-50 text-brand-700' : 'text-gray-600 hover:bg-gray-50'}`}
           >
             <FileText size={16} />
             PDFs das Leis
+          </button>
+          <button
+            onClick={() => setActiveSection('admin')}
+            className={`sidebar-item w-full text-left px-4 py-2.5 text-sm flex items-center gap-3 ${activeSection === 'admin' ? 'active bg-purple-50 text-purple-700' : 'text-gray-600 hover:bg-gray-50'}`}
+          >
+            <BarChart3 size={16} />
+            Painel Admin
           </button>
         </div>
 
