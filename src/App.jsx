@@ -8,6 +8,8 @@ import PaginaGlossario from './pages/PaginaGlossario'
 import PaginaCalculadora from './pages/PaginaCalculadora'
 import PaginaLeis from './pages/PaginaLeis'
 import PaginaAdminProtegida from './pages/PaginaAdminProtegida'
+import PaginaPrivacidade from './pages/PaginaPrivacidade'
+import BannerLGPD from './components/BannerLGPD'
 import { capitulos } from './data/capitulos'
 import { trackPageView } from './services/analytics'
 
@@ -23,7 +25,8 @@ function App() {
       'glossario': 'Glossário',
       'calculadora': 'Calculadora',
       'leis': 'PDFs das Leis',
-      'admin': 'Painel Admin'
+      'admin': 'Painel Admin',
+      'privacidade': 'Política de Privacidade'
     }
 
     const nomePagina = nomesPaginas[activeSection] || activeSection
@@ -48,6 +51,8 @@ function App() {
         return <PaginaLeis />
       case 'admin':
         return <PaginaAdminProtegida />
+      case 'privacidade':
+        return <PaginaPrivacidade />
       default:
         return <PaginaInicial setActiveSection={setActiveSection} searchTerm={searchTerm} />
     }
@@ -81,6 +86,7 @@ function App() {
               <option value="glossario">📖 Glossário</option>
               <option value="calculadora">🧮 Calculadora</option>
               <option value="leis">📁 PDFs das Leis</option>
+              <option value="privacidade">🔒 Privacidade</option>
               <option value="admin">📊 Painel Admin</option>
             </select>
           </div>
@@ -89,8 +95,9 @@ function App() {
         </main>
       </div>
 
-      <Footer />
+      <Footer onNavegar={setActiveSection} />
       <ChatBot />
+      <BannerLGPD onAceitarPrivacidade={() => setActiveSection('privacidade')} />
     </div>
   )
 }
