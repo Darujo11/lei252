@@ -57,7 +57,7 @@ export const leisOriginais = {
     nome: 'LC 355/2025',
     nomeCompleto: 'Lei Complementar nº 355/2025',
     cor: 'lei-355',
-    arquivo: 'https://sapl.macae.rj.leg.br/media/sapl/public/normajuridica/2025/7400/lei_complementar_no_355_2025.pdf',
+    arquivo: 'https://transparencia.cmmacae.rj.gov.br/arquivos/9590/LEI_COMPLEMENTAR_355_2025_0000001.pdf',
     desc: 'Última alteração - Grupos ocupacionais, avaliação',
     data: '2025',
     ementa: 'Altera a LC 252/2016 - Novos grupos ocupacionais, definições, avaliação de desempenho.'
