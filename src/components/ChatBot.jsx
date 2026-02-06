@@ -74,14 +74,58 @@ LEIS E ALTERAÇÕES:
 - LC 355/2025: Última e mais importante alteração (28/10/2025)
 
 === EVOLUÇÃO FUNCIONAL (Art. 36, alterado pela LC 355/2025) ===
-- PROGRESSÃO: a cada 2 anos, muda de letra (padrão de vencimento). Letras A até J (10 letras, 2% cada).
-- PROMOÇÃO: a cada 5 anos, muda de classe. Contado desde a admissão.
+- PROGRESSÃO: a cada 2 anos, muda de letra (padrão de vencimento). Letras A até J (10 letras, 2% cada) (conforme Art. 38 da LC 252/2016).
+- PROMOÇÃO: a cada 5 anos, muda de classe. Contado desde a admissão (conforme Art. 41 da LC 252/2016).
   * Fundamental: 2 promoções → até Classe III
   * Médio: 3 promoções → até Classe IV
   * Superior: 4 promoções → até Classe V
 - Estágio probatório: 3 anos. Conta como interstício para 1ª progressão (§4º Art. 36).
 - Efeitos financeiros: retroativos à data do requerimento (Art. 36).
 - Se não houver avaliação por culpa da administração, considera-se nota máxima (§3º Art. 36).
+
+=== PROGRESSÃO FUNCIONAL - TEXTO COMPLETO (Art. 38 da LC 252/2016, alterado pela LC 284/2019) ===
+IMPORTANTE: Sempre que falar sobre progressão funcional, cite o Art. 38 da LC 252/2016 com seus incisos.
+Art. 38 - A Progressão Funcional é horizontal, e é a passagem do servidor de seu padrão de vencimento para outro superior, dentro da faixa de vencimentos do cargo que ocupa, pelo critério de merecimento, observado o interstício de 2 (dois) anos de efetivo exercício, vinculada a disponibilidade financeira e orçamentária.
+§1º - O exercício de cargo em comissão e de mandato classista não interromperá a contagem de interstício aquisitivo.
+§2º - O servidor terá direito à Progressão, desde que satisfaça os seguintes requisitos:
+  I - for servidor estável no serviço público após o cumprimento do estágio probatório, nos termos do art. 41, §4º da Constituição Federal;
+  II - ter cumprido o interstício de 2 (dois) anos de efetivo exercício; (alterado pela LC 284/2019)
+  III - não ter mais de cinco faltas injustificadas;
+  IV - não ter licença não remunerada ou licença para tratamento de saúde superior a 6 (seis) meses consecutivos ou não;
+  V - não ter faltas, justificadas por atestados médicos, superior a 90 (noventa) dias;
+  VI - não ter sofrido pena de advertência, suspensão, destituição de cargo em comissão ou de função de confiança mediante processo administrativo disciplinar;
+  VII - obtiver, no mínimo, a média de 70% (setenta por cento) do total dos pontos das avaliações periódicas de desempenho realizadas no período.
+- Padrões de vencimento: Letras A até J (10 padrões, diferença de 2% entre cada).
+
+Art. 39 - O servidor que tiver concluído curso de ensino médio, graduação, pós-graduação, mestrado ou doutorado, desde que atendidos os requisitos do §2º do art. 38, será contemplado na progressão:
+  I - 2 padrões superiores: ensino médio concluído;
+  II - 4 padrões superiores: graduação concluída;
+  III - 6 padrões superiores: pós-graduação lato sensu (mínimo 360h);
+  IV - 8 padrões superiores: mestrado;
+  V - 10 padrões superiores: doutorado.
+§1º - Os cursos não podem ser computados cumulativamente.
+§2º - O curso deve ser relacionado com o cargo ocupado.
+§4º - Não será concedida progressão quando o curso for requisito para ingresso no cargo.
+
+=== PROMOÇÃO - TEXTO COMPLETO (Arts. 40 e 41 da LC 252/2016) ===
+IMPORTANTE: Sempre que falar sobre promoção, cite o Art. 41 da LC 252/2016 com seus incisos.
+Art. 40 - A Promoção é vertical, e é a passagem do servidor para a classe imediatamente superior àquela a que pertence, dentro da mesma carreira, observadas as normas estabelecidas nesta Lei Complementar e em regulamento específico. (alterado pela LC 284/2019)
+Parágrafo único - Os servidores promovidos ocuparão o padrão de vencimento inicial correspondente à faixa de vencimento da nova classe.
+
+Art. 41 - Poderão concorrer à promoção os servidores ativos desde que preenchidas, cumulativamente, as seguintes condições:
+  I - não ter mais de cinco faltas injustificadas;
+  II - não ter licença não remunerada ou licença para tratamento de saúde superior a 6 (seis) meses consecutivos ou não;
+  III - (Revogado pela LC 294/2020);
+  IV - não ter sofrido pena de advertência, suspensão, destituição de cargo em comissão ou de função de confiança mediante processo administrativo;
+  V - obter, no mínimo, média de 70% (setenta por cento) do total dos pontos das últimas avaliações periódicas de desempenho realizadas no período;
+  VI - estar no exercício de seu cargo;
+  VII - cumprir o interstício de 5 (cinco) anos de efetivo exercício; (alterado pela LC 284/2019)
+  VIII - Ter vaga disponível na classe a ser ocupada, e disponibilidade financeira e orçamentária. (acrescido pela LC 284/2019)
+§1º - Considera-se em exercício, para os efeitos de benefício, o tempo de serviço com as exclusões previstas no Estatuto dos Servidores.
+§2º - O exercício de cargo em comissão e de mandato classista não interromperá a contagem de interstício aquisitivo.
+§3º - A promoção do servidor dependerá sempre da existência de vaga, bem como de disponibilidade financeira e orçamentária.
+
+Art. 42 - O servidor poderá passar para o nível de vencimento seguinte antes de atingido o último padrão de uma classe, desde que observados os critérios estabelecidos nesta Lei Complementar.
 
 === TRIÊNIO (LC 294/2020 - Art. 10-A) ===
 - 5% a cada 3 anos de serviço, máximo 55% (11 triênios).
@@ -131,10 +175,10 @@ LEIS E ALTERAÇÕES:
 - Feriados: não geram redução de carga nem pagamento adicional (§5º).
 - Servidor em função gratificada/comissão: expediente diário seg-sex (§8º).
 
-=== NOVA CLASSE DE PROMOÇÃO (Art. 25 da LC 355/2025) ===
+=== NOVA CLASSE DE PROMOÇÃO (Art. 25 da LC 355/2025, c/c Art. 41 da LC 252/2016) ===
 - Criada uma NOVA classe para todos os cargos efetivos.
 - Padrão inicial: +8% sobre último padrão da classe anterior.
-- Servidores que já cumpriram requisitos podem requerer reenquadramento imediato (§3º).
+- Servidores que já cumpriram requisitos do Art. 41 da LC 252/2016 podem requerer reenquadramento imediato (§3º).
 - Efeitos financeiros: a partir da data do requerimento (§4º).
 
 === GRUPOS OCUPACIONAIS (Arts. 26-27 da LC 355/2025) ===
