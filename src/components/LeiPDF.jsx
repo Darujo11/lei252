@@ -1,19 +1,33 @@
-
 import React from 'react';
-import { leisOrdemCronologica } from '../data/leis';
+import LeiBadge from './LeiBadge';
 
 const LeiPDF = ({ capitulos }) => {
     return (
-        <div className="p-8 bg-white text-black font-serif" id="conteudo-lei-pdf">
+        <div className="p-8 bg-white text-gray-800 font-sans" id="conteudo-lei-pdf">
+            <style>
+                {`
+          .break-inside-avoid {
+            page-break-inside: avoid;
+            break-inside: avoid;
+          }
+          .pdf-header {
+             margin-bottom: 2rem;
+             text-align: center;
+             border-bottom: 2px solid #e5e7eb;
+             padding-bottom: 1rem;
+          }
+        `}
+            </style>
+
             {/* Cabeçalho */}
-            <div className="text-center mb-8 border-b-2 border-black pb-4">
-                <h1 className="text-3xl font-bold mb-2 uppercase">Lei Complementar nº 252/2016</h1>
-                <p className="text-lg mb-2">Plano de Cargos, Carreiras e Vencimentos dos Servidores da Câmara Municipal de Macaé</p>
-                <p className="text-sm italic">Texto consolidado com alterações até a Lei Complementar nº 355/2025</p>
+            <div className="pdf-header">
+                <h1 className="text-3xl font-bold mb-2 uppercase text-gray-900">Lei Complementar nº 252/2016</h1>
+                <p className="text-lg mb-2 text-gray-700">Plano de Cargos, Carreiras e Vencimentos dos Servidores da Câmara Municipal de Macaé</p>
+                <p className="text-sm italic text-blue-600">Texto consolidado com alterações até a Lei Complementar nº 355/2025</p>
             </div>
 
             {/* Preâmbulo */}
-            <div className="mb-8 text-justify italic px-8">
+            <div className="mb-8 text-justify italic px-8 text-gray-600 bg-gray-50 p-4 rounded-xl border border-gray-100 break-inside-avoid">
                 <p className="mb-4">
                     "Dispõe sobre a estruturação do Plano de Cargos, Carreiras e Vencimentos dos Servidores da Câmara Municipal de Macaé e dá outras providências."
                 </p>
@@ -25,40 +39,71 @@ const LeiPDF = ({ capitulos }) => {
             {/* Conteúdo */}
             <div className="space-y-6">
                 {capitulos.map((capitulo) => (
-                    <div key={capitulo.id} className="mb-6">
-                        <h2 className="text-xl font-bold text-center uppercase mb-1 mt-6">
-                            CAPÍTULO {capitulo.numero}
-                        </h2>
-                        <h3 className="text-lg font-bold text-center mb-4 text-gray-700">
-                            {capitulo.titulo}
-                        </h3>
+                    <div key={capitulo.id} className="mb-8 break-inside-avoid">
+                        <div className="bg-brand-50 rounded-lg p-4 mb-4 border-l-4 border-brand-500">
+                            <h2 className="text-xl font-bold uppercase text-brand-800">
+                                CAPÍTULO {capitulo.numero}
+                            </h2>
+                            <h3 className="text-lg font-medium text-brand-700">
+                                {capitulo.titulo}
+                            </h3>
+                        </div>
 
                         {capitulo.secoes.map((secao) => (
-                            <div key={secao.id} className="mb-4">
-                                <h4 className="text-md font-bold uppercase mb-2 mt-4 ml-2">
-                                    {secao.titulo}
-                                </h4>
+                            <div key={secao.id} className="mb-6 break-inside-avoid">
+                                <div className="flex items-center gap-2 mb-3 pb-1 border-b border-gray-200">
+                                    <div className="w-1.5 h-6 bg-brand-400 rounded-full"></div>
+                                    <h4 className="text-md font-bold uppercase text-gray-700">
+                                        {secao.titulo}
+                                    </h4>
+                                </div>
 
                                 {secao.artigos.map((artigo) => (
-                                    <div key={artigo.numero} className="mb-3 ml-2 text-justify">
+                                    <div key={artigo.numero} className={`bg-white rounded-xl shadow-sm border p-5 mb-4 break-inside-avoid ${artigo.revogado ? 'border-l-4 border-l-red-500 bg-red-50/50' : artigo.acrescido ? 'border-l-4 border-l-green-500 bg-green-50/30' : artigo.alterado ? 'border-l-4 border-l-amber-500 bg-amber-50/30' : 'border-l-4 border-l-gray-200'}`}>
+
                                         {/* Cabeçalho do Artigo */}
-                                        <div className="mb-1">
-                                            <span className="font-bold mr-2">Art. {artigo.numero}.</span>
-                                            <span className={artigo.revogado ? 'line-through text-gray-500' : ''}>
+                                        <div className="flex flex-wrap items-center gap-2 mb-3">
+                                            <span className="font-bold text-gray-700 bg-gray-100 px-2 py-0.5 rounded text-sm">Art. {artigo.numero}</span>
+                                            <LeiBadge lei={artigo.fonte} />
+                                            {artigo.alterado && (
+                                                <span className="text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded border border-amber-200 font-medium">
+                                                    ✏️ Alterado {artigo.alteradoPor && `(${artigo.alteradoPor})`}
+                                                </span>
+                                            )}
+                                            {artigo.acrescido && (
+                                                <span className="text-[10px] bg-green-100 text-green-800 px-1.5 py-0.5 rounded border border-green-200 font-medium">
+                                                    ➕ Acrescido {artigo.acrescidoPor && `(${artigo.acrescidoPor})`}
+                                                </span>
+                                            )}
+                                            {artigo.revogado && (
+                                                <span className="text-[10px] bg-red-100 text-red-800 px-1.5 py-0.5 rounded border border-red-200 font-medium">
+                                                    ❌ Revogado {artigo.revogadoPor && `(${artigo.revogadoPor})`}
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        {/* Texto Principal */}
+                                        <div className="mb-1 text-justify">
+                                            <span className={`text-gray-700 leading-relaxed ${artigo.revogado ? 'line-through text-gray-400' : ''}`}>
                                                 {artigo.texto}
                                             </span>
-                                            {artigo.revogado && <span className="text-xs ml-1 font-bold text-red-600">[REVOGADO]</span>}
                                         </div>
 
                                         {/* Incisos */}
                                         {artigo.incisos && artigo.incisos.length > 0 && (
-                                            <div className="ml-8 mt-1 space-y-1">
+                                            <div className="mt-4 ml-4 space-y-2 border-t border-gray-100 pt-4">
                                                 {artigo.incisos.map((inciso, idx) => (
-                                                    <div key={idx} className="flex">
-                                                        <span className="mr-2 min-w-[20px] text-right">{inciso.numero} –</span>
-                                                        <span className={inciso.revogado ? 'line-through text-gray-500' : ''}>
-                                                            {inciso.texto}
-                                                        </span>
+                                                    <div key={idx} className={`flex gap-2 text-justify ${inciso.revogado ? 'line-through text-gray-400' : ''}`}>
+                                                        <span className="font-semibold text-brand-600 shrink-0">{inciso.numero} –</span>
+                                                        <div className="flex-1">
+                                                            <span className="text-gray-600">{inciso.texto}</span>
+                                                            <div className="inline-flex gap-1 ml-2 align-middle">
+                                                                <LeiBadge lei={inciso.fonte} />
+                                                                {inciso.alterado && <span className="text-[10px] bg-amber-100 text-amber-800 px-1 rounded">Alt.</span>}
+                                                                {inciso.acrescido && <span className="text-[10px] bg-green-100 text-green-800 px-1 rounded">Acr.</span>}
+                                                                {inciso.revogado && <span className="text-[10px] bg-red-100 text-red-800 px-1 rounded">Rev.</span>}
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 ))}
                                             </div>
@@ -66,15 +111,39 @@ const LeiPDF = ({ capitulos }) => {
 
                                         {/* Parágrafos */}
                                         {artigo.paragrafos && artigo.paragrafos.length > 0 && (
-                                            <div className="ml-4 mt-2 space-y-1">
+                                            <div className="mt-4 space-y-3">
                                                 {artigo.paragrafos.map((par, idx) => (
-                                                    <div key={idx} className="text-justify">
-                                                        <span className="font-bold mr-2">
-                                                            {par.numero === 'único' ? 'Parágrafo único.' : `§ ${par.numero}`}
+                                                    <div key={idx} className={`flex gap-2 text-justify ${par.revogado ? 'line-through text-gray-400' : ''}`}>
+                                                        <span className="font-semibold text-gray-500 shrink-0">
+                                                            {par.numero === 'único' ? 'Parágrafo único -' : `§ ${par.numero}`}
                                                         </span>
-                                                        <span className={par.revogado ? 'line-through text-gray-500' : ''}>
-                                                            {par.texto}
-                                                        </span>
+                                                        <div className="flex-1">
+                                                            <span className="text-gray-600">
+                                                                {par.texto.startsWith('Parágrafo único.') || par.texto.startsWith('Parágrafo único -')
+                                                                    ? par.texto.replace(/^Parágrafo único[.-]\s*/, '')
+                                                                    : par.texto}
+                                                            </span>
+                                                            <div className="inline-flex gap-1 ml-2 align-middle">
+                                                                <LeiBadge lei={par.fonte} />
+                                                                {par.alterado && <span className="text-[10px] bg-amber-100 text-amber-800 px-1 rounded">Alt.</span>}
+                                                                {par.acrescido && <span className="text-[10px] bg-green-100 text-green-800 px-1 rounded">Acr.</span>}
+                                                                {par.revogado && <span className="text-[10px] bg-red-100 text-red-800 px-1 rounded">Rev.</span>}
+                                                            </div>
+
+                                                            {/* Incisos dentro do Parágrafo */}
+                                                            {par.incisos && par.incisos.length > 0 && (
+                                                                <div className="mt-2 ml-4 space-y-1 bg-gray-50/50 p-2 rounded">
+                                                                    {par.incisos.map((inciso, incisoIdx) => (
+                                                                        <div key={incisoIdx} className={`flex gap-2 ${inciso.revogado ? 'opacity-60' : ''}`}>
+                                                                            <span className="font-semibold text-brand-600 shrink-0 text-sm">{inciso.numero} –</span>
+                                                                            <div className="flex-1">
+                                                                                <span className={`text-gray-600 text-sm ${inciso.revogado ? 'line-through' : ''}`}>{inciso.texto}</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    ))}
+                                                                </div>
+                                                            )}
+                                                        </div>
                                                     </div>
                                                 ))}
                                             </div>
@@ -88,16 +157,16 @@ const LeiPDF = ({ capitulos }) => {
             </div>
 
             {/* Rodapé */}
-            <div className="mt-12 pt-8 border-t border-black text-center">
-                <p className="font-bold">Macaé, 30 de março de 2016.</p>
+            <div className="mt-12 pt-8 border-t-2 border-gray-200 text-center break-inside-avoid">
+                <p className="font-bold text-gray-800">Macaé, 30 de março de 2016.</p>
                 <div className="mt-8 grid grid-cols-2 gap-8">
                     <div>
-                        <p className="font-bold">EDUARDO CARDOSO GONÇALVES DA SILVA</p>
-                        <p className="text-sm">PRESIDENTE</p>
+                        <p className="font-bold text-gray-900">EDUARDO CARDOSO GONÇALVES DA SILVA</p>
+                        <p className="text-sm text-gray-600">PRESIDENTE</p>
                     </div>
                     <div>
-                        <p className="font-bold">WELBERTH PORTO DE REZENDE</p>
-                        <p className="text-sm">1º SECRETÁRIO</p>
+                        <p className="font-bold text-gray-900">WELBERTH PORTO DE REZENDE</p>
+                        <p className="text-sm text-gray-600">1º SECRETÁRIO</p>
                     </div>
                 </div>
             </div>
