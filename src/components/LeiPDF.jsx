@@ -99,9 +99,9 @@ const LeiPDF = ({ capitulos }) => {
                                                             <span className="text-gray-600">{inciso.texto}</span>
                                                             <div className="inline-flex gap-1 ml-2 align-middle">
                                                                 <LeiBadge lei={inciso.fonte} />
-                                                                {inciso.alterado && <span className="text-[10px] bg-amber-100 text-amber-800 px-1 rounded">Alt.</span>}
-                                                                {inciso.acrescido && <span className="text-[10px] bg-green-100 text-green-800 px-1 rounded">Acr.</span>}
-                                                                {inciso.revogado && <span className="text-[10px] bg-red-100 text-red-800 px-1 rounded">Rev.</span>}
+                                                                {inciso.alterado && <span className="text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded border border-amber-200 whitespace-nowrap">Alterado {inciso.alteradoPor && `(${inciso.alteradoPor})`}</span>}
+                                                                {inciso.acrescido && <span className="text-[10px] bg-green-100 text-green-800 px-1.5 py-0.5 rounded border border-green-200 whitespace-nowrap">Acrescido {inciso.acrescidoPor && `(${inciso.acrescidoPor})`}</span>}
+                                                                {inciso.revogado && <span className="text-[10px] bg-red-100 text-red-800 px-1.5 py-0.5 rounded border border-red-200 whitespace-nowrap">Revogado {inciso.revogadoPor && `(${inciso.revogadoPor})`}</span>}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -125,9 +125,9 @@ const LeiPDF = ({ capitulos }) => {
                                                             </span>
                                                             <div className="inline-flex gap-1 ml-2 align-middle">
                                                                 <LeiBadge lei={par.fonte} />
-                                                                {par.alterado && <span className="text-[10px] bg-amber-100 text-amber-800 px-1 rounded">Alt.</span>}
-                                                                {par.acrescido && <span className="text-[10px] bg-green-100 text-green-800 px-1 rounded">Acr.</span>}
-                                                                {par.revogado && <span className="text-[10px] bg-red-100 text-red-800 px-1 rounded">Rev.</span>}
+                                                                {par.alterado && <span className="text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded border border-amber-200 whitespace-nowrap">Alterado {par.alteradoPor && `(${par.alteradoPor})`}</span>}
+                                                                {par.acrescido && <span className="text-[10px] bg-green-100 text-green-800 px-1.5 py-0.5 rounded border border-green-200 whitespace-nowrap">Acrescido {par.acrescidoPor && `(${par.acrescidoPor})`}</span>}
+                                                                {par.revogado && <span className="text-[10px] bg-red-100 text-red-800 px-1.5 py-0.5 rounded border border-red-200 whitespace-nowrap">Revogado {par.revogadoPor && `(${par.revogadoPor})`}</span>}
                                                             </div>
 
                                                             {/* Incisos dentro do Parágrafo */}
