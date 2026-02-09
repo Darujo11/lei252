@@ -5,13 +5,10 @@ import { capitulos as capitulosEstaticos } from '../data/capitulos'
 import ArtigoCard from '../components/ArtigoCard'
 import LeiPDF from '../components/LeiPDF'
 import { getLatestLeiVersion, isSupabaseEnabled } from '../services/analytics'
-// Importação dinâmica do html2pdf para evitar erros de SSR se fosse o caso, mas aqui é SPA
-import html2pdf from 'html2pdf.js'
 
 export default function PaginaInicial({ setActiveSection, searchTerm }) {
   const [capitulos, setCapitulos] = useState(capitulosEstaticos)
   const [carregando, setCarregando] = useState(true)
-  const [gerandoPDF, setGerandoPDF] = useState(false)
   const [versaoAtual, setVersaoAtual] = useState(null)
   const [capitulosAbertos, setCapitulosAbertos] = useState(
     capitulosEstaticos.reduce((acc, cap) => ({ ...acc, [cap.id]: true }), {})
@@ -55,31 +52,18 @@ export default function PaginaInicial({ setActiveSection, searchTerm }) {
     setSecoesAbertas(prev => ({ ...prev, [secId]: !prev[secId] }))
   }
 
-  const handleDownloadPDF = async () => {
-    setGerandoPDF(true)
-    const element = document.getElementById('conteudo-lei-pdf')
-
-    const opt = {
-      margin: [10, 10, 10, 10], // Margens: top, left, bottom, right
-      filename: 'LC252-Consolidada.pdf',
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-    }
-
-    try {
-      await html2pdf().set(opt).from(element).save()
-    } catch (error) {
-      console.error('Erro ao gerar PDF:', error)
-      alert('Erro ao gerar o PDF. Tente novamente.')
-    } finally {
-      setGerandoPDF(false)
-    }
+  const handleDownloadPDF = () => {
+    // Apenas invocar a impressão nativa do navegador
+    // O CSS @media print cuidará de ocultar o resto e mostrar apenas o #conteudo-lei-print
+    window.print()
   }
 
   return (
-    <div className="animate-fade-in">
+    <div className="animate-fade-in relative">
+      {/* Container Principal da Aplicação - ocultar quando gerando PDF para evitar conflitos visuais se necessário,
+          mas html2pdf deve pegar apenas o elemento alvo. 
+          O importante é o overlay estar por cima. */}
+
       {/* Hero Compacto */}
       <div className="gradient-hero rounded-2xl p-6 md:p-8 text-white mb-6">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -106,18 +90,9 @@ export default function PaginaInicial({ setActiveSection, searchTerm }) {
           <div className="flex flex-wrap gap-2">
             <button
               onClick={handleDownloadPDF}
-              disabled={gerandoPDF}
-              className="bg-brand-500 hover:bg-brand-400 text-white px-3 py-2 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-colors disabled:opacity-70 disabled:cursor-not-allowed shadow-md"
+              className="bg-brand-500 hover:bg-brand-400 text-white px-3 py-2 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-colors shadow-md"
             >
-              {gerandoPDF ? (
-                <>
-                  <RefreshCw size={14} className="animate-spin" /> Gerando PDF...
-                </>
-              ) : (
-                <>
-                  <Download size={14} /> Baixar PDF
-                </>
-              )}
+              <Download size={14} /> Imprimir / Salvar PDF
             </button>
             <button onClick={() => setActiveSection('glossario')} className="bg-white/20 hover:bg-white/30 px-3 py-2 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-colors">
               <BookOpen size={14} /> Glossário
@@ -132,8 +107,8 @@ export default function PaginaInicial({ setActiveSection, searchTerm }) {
         </div>
       </div>
 
-      {/* Componente Oculto para Geração do PDF */}
-      <div style={{ position: 'absolute', left: '-9999px', top: 0 }}>
+      {/* Componente para Impressão/PDF (Oculto na tela, visível na impressão) */}
+      <div id="conteudo-lei-print" className="hidden print:block">
         <LeiPDF capitulos={capitulos} />
       </div>
 

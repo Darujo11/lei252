@@ -107,6 +107,51 @@
 }
 
 /* Print */
+/* Print */
 @media print {
-  .no-print { display: none !important; }
+  /* Ocultar tudo por padrão */
+  body > * {
+    display: none !important;
+  }
+
+  /* Exibir apenas o container de impressão */
+  body > #root {
+    display: block !important;
+  }
+  
+  #root > * {
+    display: none !important;
+  }
+
+  /* Exceção para o conteúdo do PDF/Impressão */
+  #conteudo-lei-print {
+    display: block !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    background: white !important;
+    color: black !important;
+    z-index: 99999 !important;
+    margin: 0 !important;
+    padding: 20px !important; 
+  }
+
+  /* Resetar cores e sombras para impressão */
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  
+  /* Quebras de página */
+  .break-inside-avoid {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+}
+
+.no-print {
+  @media print {
+    display: none !important;
+  }
 }
