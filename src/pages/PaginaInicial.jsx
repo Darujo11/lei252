@@ -1,14 +1,51 @@
-import { useState } from 'react'
-import { BookOpen, Calculator, FileText, ChevronDown, ChevronUp } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+import { BookOpen, Calculator, FileText, ChevronDown, ChevronUp, RefreshCw, Download } from 'lucide-react'
 import { leisOrdemCronologica } from '../data/leis'
-import { capitulos } from '../data/capitulos'
+import { capitulos as capitulosEstaticos } from '../data/capitulos'
 import ArtigoCard from '../components/ArtigoCard'
+import LeiPDF from '../components/LeiPDF'
+import { getLatestLeiVersion, isSupabaseEnabled } from '../services/analytics'
+// Importação dinâmica do html2pdf para evitar erros de SSR se fosse o caso, mas aqui é SPA
+import html2pdf from 'html2pdf.js'
 
 export default function PaginaInicial({ setActiveSection, searchTerm }) {
+  const [capitulos, setCapitulos] = useState(capitulosEstaticos)
+  const [carregando, setCarregando] = useState(true)
+  const [gerandoPDF, setGerandoPDF] = useState(false)
+  const [versaoAtual, setVersaoAtual] = useState(null)
   const [capitulosAbertos, setCapitulosAbertos] = useState(
-    capitulos.reduce((acc, cap) => ({ ...acc, [cap.id]: true }), {})
+    capitulosEstaticos.reduce((acc, cap) => ({ ...acc, [cap.id]: true }), {})
   )
   const [secoesAbertas, setSecoesAbertas] = useState({})
+
+  const contentRef = useRef(null)
+
+  // Buscar lei do Supabase ao carregar
+  useEffect(() => {
+    const carregarLei = async () => {
+      if (!isSupabaseEnabled()) {
+        setCarregando(false)
+        return
+      }
+
+      try {
+        const versao = await getLatestLeiVersion()
+        if (versao && versao.content) {
+          setCapitulos(versao.content)
+          setVersaoAtual(versao.version_number)
+          console.log(`✅ Lei carregada do Supabase (Versão ${versao.version_number})`)
+        } else {
+          console.log('📖 Usando lei estática (nenhuma versão no Supabase)')
+        }
+      } catch (error) {
+        console.error('Erro ao carregar lei do Supabase:', error)
+      } finally {
+        setCarregando(false)
+      }
+    }
+
+    carregarLei()
+  }, [])
 
   const toggleCapitulo = (capId) => {
     setCapitulosAbertos(prev => ({ ...prev, [capId]: !prev[capId] }))
@@ -16,6 +53,28 @@ export default function PaginaInicial({ setActiveSection, searchTerm }) {
 
   const toggleSecao = (secId) => {
     setSecoesAbertas(prev => ({ ...prev, [secId]: !prev[secId] }))
+  }
+
+  const handleDownloadPDF = async () => {
+    setGerandoPDF(true)
+    const element = document.getElementById('conteudo-lei-pdf')
+
+    const opt = {
+      margin: [10, 10, 10, 10], // Margens: top, left, bottom, right
+      filename: 'LC252-Consolidada.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    }
+
+    try {
+      await html2pdf().set(opt).from(element).save()
+    } catch (error) {
+      console.error('Erro ao gerar PDF:', error)
+      alert('Erro ao gerar o PDF. Tente novamente.')
+    } finally {
+      setGerandoPDF(false)
+    }
   }
 
   return (
@@ -28,11 +87,37 @@ export default function PaginaInicial({ setActiveSection, searchTerm }) {
             <p className="text-blue-100 text-sm md:text-base">
               Plano de Cargos, Carreiras e Vencimentos - Câmara Municipal de Macaé
             </p>
-            <p className="text-blue-200 text-xs mt-2">
+            <p className="text-blue-200 text-xs mt-2 flex items-center gap-2">
               📌 Texto consolidado com alterações até LC 355/2025
+              {carregando && (
+                <span className="flex items-center gap-1">
+                  <RefreshCw size={12} className="animate-spin" />
+                  Carregando...
+                </span>
+              )}
+              {versaoAtual && (
+                <span className="bg-green-500/30 px-2 py-0.5 rounded text-green-100">
+                  v{versaoAtual}
+                </span>
+              )}
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
+            <button
+              onClick={handleDownloadPDF}
+              disabled={gerandoPDF}
+              className="bg-brand-500 hover:bg-brand-400 text-white px-3 py-2 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-colors disabled:opacity-70 disabled:cursor-not-allowed shadow-md"
+            >
+              {gerandoPDF ? (
+                <>
+                  <RefreshCw size={14} className="animate-spin" /> Gerando PDF...
+                </>
+              ) : (
+                <>
+                  <Download size={14} /> Baixar PDF
+                </>
+              )}
+            </button>
             <button onClick={() => setActiveSection('glossario')} className="bg-white/20 hover:bg-white/30 px-3 py-2 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-colors">
               <BookOpen size={14} /> Glossário
             </button>
@@ -40,10 +125,15 @@ export default function PaginaInicial({ setActiveSection, searchTerm }) {
               <Calculator size={14} /> Calculadora
             </button>
             <button onClick={() => setActiveSection('leis')} className="bg-white/20 hover:bg-white/30 px-3 py-2 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-colors">
-              <FileText size={14} /> PDFs
+              <FileText size={14} /> Arquivos
             </button>
           </div>
         </div>
+      </div>
+
+      {/* Componente Oculto para Geração do PDF */}
+      <div style={{ position: 'absolute', left: '-9999px', top: 0 }}>
+        <LeiPDF capitulos={capitulos} />
       </div>
 
       {/* Legenda dos Badges */}
