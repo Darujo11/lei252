@@ -301,7 +301,7 @@ export const capitulos = [
             fonte: 'lc355',
             alterado: true,
             paragrafos: [
-              { numero: 'único', texto: 'Da Comissão deverá fazer parte:', fonte: 'lc355' }
+              { numero: 'único', texto: 'Parágrafo único. Da Comissão deverá fazer parte:', fonte: 'lc355' }
             ],
             incisos: [
               { numero: 'I', texto: 'O Diretor Geral da Câmara Municipal, como Presidente desta Comissão;', fonte: 'lc355' },
@@ -480,7 +480,14 @@ export const capitulos = [
             destaque: true,
             paragrafos: [
               { numero: '1º', texto: 'A habilitação dependerá da pontuação recebida na Avaliação Periódica de Desempenho, disponibilidade financeira e existência de vaga no caso da promoção.', fonte: 'lc252' },
-              { numero: '2º', texto: 'Em caso de empate será contemplado o servidor que, sucessivamente: I – estiver há mais tempo sem ter obtido uma Progressão Horizontal; II – tiver obtido a maior nota na Avaliação de Desempenho mais recente; III – tiver maior tempo de efetivo exercício no cargo; IV – tiver maior número de dias efetivamente trabalhados na Câmara Municipal de Macaé.', fonte: 'lc252' },
+              {
+                numero: '2º', texto: 'Em caso de empate será contemplado o servidor que, sucessivamente:', fonte: 'lc252', incisos: [
+                  { numero: 'I', texto: 'estiver há mais tempo sem ter obtido uma Progressão Horizontal;', fonte: 'lc252' },
+                  { numero: 'II', texto: 'tiver obtido a maior nota na Avaliação de Desempenho mais recente;', fonte: 'lc252' },
+                  { numero: 'III', texto: 'tiver maior tempo de efetivo exercício no cargo;', fonte: 'lc252' },
+                  { numero: 'IV', texto: 'tiver maior número de dias efetivamente trabalhados na Câmara Municipal de Macaé.', fonte: 'lc252' }
+                ]
+              },
               { numero: '3º', texto: 'Na ausência de avaliação periódica de desempenho por motivo não imputável ao servidor, esta será considerada realizada com o percentual máximo estabelecido.', fonte: 'lc355', alterado: true },
               { numero: '4º', texto: 'Para a concessão de qualquer evolução funcional, é necessária a aprovação do servidor em estágio probatório, o qual será contado como interstício para a sua primeira progressão funcional, sem que dela decorra concessão automática antes da conclusão do referido estágio.', fonte: 'lc355', acrescido: true }
             ]
