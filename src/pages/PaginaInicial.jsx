@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { BookOpen, Calculator, FileText, ChevronDown, ChevronUp, RefreshCw, Download } from 'lucide-react'
 import { leisOrdemCronologica } from '../data/leis'
 import { capitulos as capitulosEstaticos } from '../data/capitulos'
@@ -107,10 +108,13 @@ export default function PaginaInicial({ setActiveSection, searchTerm }) {
         </div>
       </div>
 
-      {/* Componente para Impressão/PDF (Oculto na tela, visível na impressão) */}
-      <div id="conteudo-lei-print" className="hidden print:block">
-        <LeiPDF capitulos={capitulos} />
-      </div>
+      {/* Componente para Impressão/PDF via Portal (Fora da árvore principal para evitar CSS display:none do pai) */}
+      {createPortal(
+        <div id="conteudo-lei-print" className="hidden print:block">
+          <LeiPDF capitulos={capitulos} />
+        </div>,
+        document.body
+      )}
 
       {/* Legenda dos Badges */}
       <div className="bg-white rounded-xl p-4 mb-6 shadow-sm border border-gray-100">

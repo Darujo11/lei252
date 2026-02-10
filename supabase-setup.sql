@@ -195,3 +195,61 @@ Por padrão, este script permite SELECT público (leitura) para facilitar o dese
 Em produção, você pode remover as políticas "Permitir SELECT público" e implementar
 autenticação adequada usando o Supabase Auth.
 */
+
+-- ============================================
+-- TABELAS PARA VERSIONAMENTO DA LEI
+-- ============================================
+
+-- TABELA 5: Versões da Lei
+-- Armazena cada versão modificada da lei
+CREATE TABLE IF NOT EXISTS lei_versions (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  version_number INTEGER NOT NULL,
+  content JSONB NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  created_by TEXT DEFAULT 'admin'
+);
+
+-- TABELA 6: Log de Alterações da Lei
+-- Registra cada alteração feita em cada versão
+CREATE TABLE IF NOT EXISTS lei_changes (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  version_id UUID REFERENCES lei_versions(id) ON DELETE CASCADE,
+  artigo_numero TEXT,
+  campo_alterado TEXT,
+  valor_anterior TEXT,
+  valor_novo TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Índices para lei_versions
+CREATE INDEX IF NOT EXISTS idx_lei_versions_number ON lei_versions(version_number);
+CREATE INDEX IF NOT EXISTS idx_lei_versions_created ON lei_versions(created_at);
+
+-- Índices para lei_changes
+CREATE INDEX IF NOT EXISTS idx_lei_changes_version ON lei_changes(version_id);
+
+-- Habilita RLS
+ALTER TABLE lei_versions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE lei_changes ENABLE ROW LEVEL SECURITY;
+
+-- Políticas de segurança para lei_versions
+DROP POLICY IF EXISTS "Permitir INSERT público lei_versions" ON lei_versions;
+DROP POLICY IF EXISTS "Permitir SELECT público lei_versions" ON lei_versions;
+
+CREATE POLICY "Permitir INSERT público lei_versions" ON lei_versions
+  FOR INSERT WITH CHECK (true);
+
+CREATE POLICY "Permitir SELECT público lei_versions" ON lei_versions
+  FOR SELECT USING (true);
+
+-- Políticas de segurança para lei_changes
+DROP POLICY IF EXISTS "Permitir INSERT público lei_changes" ON lei_changes;
+DROP POLICY IF EXISTS "Permitir SELECT público lei_changes" ON lei_changes;
+
+CREATE POLICY "Permitir INSERT público lei_changes" ON lei_changes
+  FOR INSERT WITH CHECK (true);
+
+CREATE POLICY "Permitir SELECT público lei_changes" ON lei_changes
+  FOR SELECT USING (true);
+

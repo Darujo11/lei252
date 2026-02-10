@@ -8,7 +8,7 @@ export default function ChatBot() {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      content: '👋 Olá! Sou uma **Inteligência Artificial** especializada na **Lei Complementar 252/2016** e suas alterações.\n\nPosso ajudar com dúvidas sobre:\n- Triênios e Mérito\n- Progressões e Promoções\n- Cargos e Vencimentos\n- E muito mais!\n\n💬 Como posso ajudar você hoje?'
+      content: '👋 Olá! Sou uma **Inteligência Artificial** especializada na **Lei Complementar 252/2016** e suas alterações.\n\n✨ **Novidade:** Agora você pode **imprimir** ou **salvar em PDF** o texto integral da lei clicando no botão no topo da página!\n\nPosso ajudar também com:\n- 📅 Triênios e Mérito\n- 📈 Progressões e Promoções\n- 💰 Cargos e Vencimentos\n\n💬 Como posso ajudar você hoje?'
     }
   ])
   const [input, setInput] = useState('')
@@ -192,11 +192,10 @@ export default function ChatBot() {
                 className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-[80%] p-3 rounded-xl ${
-                    message.role === 'user'
+                  className={`max-w-[80%] p-3 rounded-xl ${message.role === 'user'
                       ? 'bg-brand-600 text-white rounded-br-none'
                       : 'bg-white text-gray-800 rounded-bl-none shadow-sm border border-gray-100'
-                  }`}
+                    }`}
                 >
                   {message.role === 'user' ? (
                     <p className="text-sm whitespace-pre-wrap">{message.content}</p>
@@ -204,13 +203,13 @@ export default function ChatBot() {
                     <div className="text-sm prose prose-sm max-w-none">
                       <ReactMarkdown
                         components={{
-                          p: ({node, ...props}) => <p className="mb-2 last:mb-0" {...props} />,
-                          strong: ({node, ...props}) => <strong className="font-bold text-gray-900" {...props} />,
-                          ul: ({node, ...props}) => <ul className="list-disc pl-4 space-y-1 my-2" {...props} />,
-                          ol: ({node, ...props}) => <ol className="list-decimal pl-4 space-y-1 my-2" {...props} />,
-                          li: ({node, ...props}) => <li className="text-gray-700" {...props} />,
-                          code: ({node, ...props}) => <code className="bg-gray-100 px-1 py-0.5 rounded text-xs font-mono" {...props} />,
-                          h3: ({node, ...props}) => <h3 className="font-bold text-base mb-1 mt-2" {...props} />,
+                          p: ({ node, ...props }) => <p className="mb-2 last:mb-0" {...props} />,
+                          strong: ({ node, ...props }) => <strong className="font-bold text-gray-900" {...props} />,
+                          ul: ({ node, ...props }) => <ul className="list-disc pl-4 space-y-1 my-2" {...props} />,
+                          ol: ({ node, ...props }) => <ol className="list-decimal pl-4 space-y-1 my-2" {...props} />,
+                          li: ({ node, ...props }) => <li className="text-gray-700" {...props} />,
+                          code: ({ node, ...props }) => <code className="bg-gray-100 px-1 py-0.5 rounded text-xs font-mono" {...props} />,
+                          h3: ({ node, ...props }) => <h3 className="font-bold text-base mb-1 mt-2" {...props} />,
                         }}
                       >
                         {message.content}

@@ -268,3 +268,162 @@ export const getVisitasPorDia = async (diasAtras = 30) => {
     return []
   }
 }
+
+// ============================================
+// GERENCIAMENTO DE VERSÕES DA LEI
+// ============================================
+
+/**
+ * Salva uma nova versão da lei no Supabase
+ * @param {Array} capitulos - Dados dos capítulos da lei
+ * @param {Array} changes - Lista de alterações detectadas
+ * @param {string} createdBy - Identificador do usuário que fez a alteração
+ * @returns {Object} - Resultado da operação
+ */
+export const saveLeiVersion = async (capitulos, changes = [], createdBy = 'admin') => {
+  if (!checkSupabase()) {
+    return { success: false, error: 'Supabase não configurado' }
+  }
+
+  try {
+    // Buscar número da última versão
+    const { data: lastVersion } = await supabase
+      .from('lei_versions')
+      .select('version_number')
+      .order('version_number', { ascending: false })
+      .limit(1)
+      .single()
+
+    const newVersionNumber = (lastVersion?.version_number || 0) + 1
+
+    // Inserir nova versão
+    const { data: versionData, error: versionError } = await supabase
+      .from('lei_versions')
+      .insert([{
+        version_number: newVersionNumber,
+        content: capitulos,
+        created_by: createdBy
+      }])
+      .select()
+      .single()
+
+    if (versionError) throw versionError
+
+    // Inserir log de alterações
+    if (changes.length > 0) {
+      const changeRecords = changes.map(change => ({
+        version_id: versionData.id,
+        artigo_numero: String(change.artigo),
+        campo_alterado: change.campo,
+        valor_anterior: change.valorAnterior,
+        valor_novo: change.valorNovo
+      }))
+
+      const { error: changesError } = await supabase
+        .from('lei_changes')
+        .insert(changeRecords)
+
+      if (changesError) {
+        console.error('Erro ao salvar log de alterações:', changesError)
+      }
+    }
+
+    console.log(`✅ Versão ${newVersionNumber} da lei salva com sucesso`)
+    return {
+      success: true,
+      versionNumber: newVersionNumber,
+      versionId: versionData.id,
+      changesCount: changes.length
+    }
+  } catch (error) {
+    console.error('Erro ao salvar versão da lei:', error)
+    return { success: false, error: error.message }
+  }
+}
+
+/**
+ * Recupera a última versão da lei do Supabase
+ * @returns {Object} - Dados da última versão ou null
+ */
+export const getLatestLeiVersion = async () => {
+  if (!checkSupabase()) {
+    console.log('🔴 Supabase não está habilitado')
+    return null
+  }
+
+  try {
+    console.log('🔍 Buscando última versão da lei no Supabase...')
+
+    const { data, error } = await supabase
+      .from('lei_versions')
+      .select('*')
+      .order('version_number', { ascending: false })
+      .limit(1)
+      .single()
+
+    if (error && error.code !== 'PGRST116') {
+      console.error('❌ Erro na busca:', error)
+      throw error
+    }
+
+    if (data) {
+      console.log('✅ Versão encontrada:', data.version_number)
+      console.log('📄 Content type:', typeof data.content)
+      console.log('📄 Content length:', data.content ? (Array.isArray(data.content) ? data.content.length : 'não é array') : 'null')
+    } else {
+      console.log('📭 Nenhuma versão encontrada no Supabase')
+    }
+
+    return data
+  } catch (error) {
+    console.error('Erro ao recuperar última versão:', error)
+    return null
+  }
+}
+
+/**
+ * Obtém histórico de versões da lei
+ * @param {number} limite - Número máximo de versões a retornar
+ * @returns {Array} - Lista de versões
+ */
+export const getLeiVersionHistory = async (limite = 20) => {
+  if (!checkSupabase()) return []
+
+  try {
+    const { data, error } = await supabase
+      .from('lei_versions')
+      .select('id, version_number, created_at, created_by')
+      .order('version_number', { ascending: false })
+      .limit(limite)
+
+    if (error) throw error
+    return data || []
+  } catch (error) {
+    console.error('Erro ao obter histórico de versões:', error)
+    return []
+  }
+}
+
+/**
+ * Obtém log de alterações de uma versão específica
+ * @param {string} versionId - ID da versão
+ * @returns {Array} - Lista de alterações
+ */
+export const getLeiChangesForVersion = async (versionId) => {
+  if (!checkSupabase()) return []
+
+  try {
+    const { data, error } = await supabase
+      .from('lei_changes')
+      .select('*')
+      .eq('version_id', versionId)
+      .order('created_at', { ascending: true })
+
+    if (error) throw error
+    return data || []
+  } catch (error) {
+    console.error('Erro ao obter alterações da versão:', error)
+    return []
+  }
+}
+
